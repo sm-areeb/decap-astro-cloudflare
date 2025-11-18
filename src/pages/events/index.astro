@@ -1,0 +1,116 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import EventCard from '../../components/EventCard.astro';
+
+const events = await getCollection('events');
+type EventType = typeof events[number];
+const featuredEvents = events.filter((event: EventType) => event.data.featured);
+const upcomingEvents = events
+  .filter((event: EventType) => new Date(event.data.date) >= new Date())
+  .sort((a: EventType, b: EventType) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime());
+const pastEvents = events
+  .filter((event: EventType) => new Date(event.data.date) < new Date())
+  .sort((a: EventType, b: EventType) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+---
+
+<Layout title="Events | Restaurant Name" description="Discover our upcoming events and special dining experiences">
+  <div class="min-h-screen bg-base-200">
+    <!-- Hero Section -->
+    <section class="hero bg-base-100 py-16">
+      <div class="hero-content text-center">
+        <div class="max-w-4xl">
+          <h1 class="text-5xl font-bold text-base-content mb-6">
+            Special Events & Experiences
+          </h1>
+          <p class="text-xl text-base-content/70 mb-8">
+            Join us for unforgettable dining experiences, from intimate wine tastings to festive celebrations.
+            Browse our upcoming and past events.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Events -->
+    {featuredEvents.length > 0 && (
+      <section class="py-16 px-4">
+        <div class="container mx-auto max-w-6xl">
+          <h2 class="text-3xl font-bold text-center mb-12 text-base-content">
+            Featured Events
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredEvents.map((event: EventType) => (
+              <EventCard event={event} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- All Upcoming Events -->
+    <section class="py-16 px-4 bg-base-100">
+      <div class="container mx-auto max-w-6xl">
+        <h2 class="text-3xl font-bold text-center mb-12 text-base-content">
+          Upcoming Events
+        </h2>
+        {upcomingEvents.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {upcomingEvents.map((event: EventType) => (
+              <EventCard event={event} />
+            ))}
+          </div>
+        ) : (
+          <div class="text-center py-12">
+            <div class="text-6xl mb-4">📅</div>
+            <h3 class="text-2xl font-semibold text-base-content mb-4">
+              No Upcoming Events
+            </h3>
+            <p class="text-base-content/70 mb-6">
+              Check back soon for new events and special dining experiences.
+            </p>
+            <a href="/" class="btn btn-primary">
+              Return to Homepage
+            </a>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- Past Events -->
+    {pastEvents.length > 0 && (
+      <section class="py-16 px-4">
+        <div class="container mx-auto max-w-6xl">
+          <h2 class="text-3xl font-bold text-center mb-12 text-base-content">
+            Past Events
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {pastEvents.map((event: EventType) => (
+              <EventCard event={event} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Call to Action -->
+    <section class="py-16 px-4">
+      <div class="container mx-auto max-w-4xl text-center">
+        <h2 class="text-3xl font-bold text-base-content mb-6">
+          Host Your Special Event With Us
+        </h2>
+        <p class="text-lg text-base-content/70 mb-8">
+          Looking to host a private event, celebration, or corporate gathering?
+          Our team specializes in creating memorable experiences tailored to your needs.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/contact" class="btn btn-primary">
+            Contact Us
+          </a>
+          <a href="/reservations" class="btn btn-outline">
+            Make a Reservation
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>

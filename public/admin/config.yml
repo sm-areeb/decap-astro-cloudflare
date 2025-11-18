@@ -1,0 +1,184 @@
+backend:
+  name: github
+  repo: your-username/decap-astro-cloudflare
+  branch: main
+
+media_folder: public/uploads
+public_folder: /uploads
+publish_mode: editorial_workflow
+display_url: https://your-cloudflare-pages-domain.pages.dev
+
+collections:
+  - name: pages
+    label: Pages
+    editor:
+      preview: false
+    files:
+      - file: src/content/pages/home.md
+        label: Home
+        name: home
+        fields:
+          - { label: Title, name: title, widget: string }
+          - label: Hero
+            name: hero
+            widget: object
+            fields:
+              - { label: Eyebrow, name: eyebrow, widget: string, required: false }
+              - { label: Heading, name: heading, widget: string }
+              - { label: Subheading, name: subheading, widget: text }
+              - label: Primary CTA
+                name: primaryCta
+                widget: object
+                required: false
+                fields:
+                  - { label: Label, name: label, widget: string }
+                  - { label: Link, name: href, widget: string }
+              - label: Secondary CTA
+                name: secondaryCta
+                widget: object
+                required: false
+                fields:
+                  - { label: Label, name: label, widget: string }
+                  - { label: Link, name: href, widget: string }
+              - { label: Background image URL, name: backgroundImage, widget: string, required: false }
+          - label: Featured menu items
+            name: featuredMenuItems
+            widget: relation
+            multiple: true
+            collection: menu
+            search_fields: [title]
+            value_field: slug
+            display_fields: [title]
+          - { label: Body, name: body, widget: markdown }
+          - label: SEO
+            name: seo
+            widget: object
+            required: false
+            fields:
+              - { label: Description, name: description, widget: text, required: false }
+              - { label: Social image URL, name: image, widget: string, required: false }
+      - file: src/content/pages/menu.md
+        label: Menu
+        name: menu
+        fields:
+          - { label: Title, name: title, widget: string }
+          - label: Hero
+            name: hero
+            widget: object
+            required: false
+            fields:
+              - { label: Eyebrow, name: eyebrow, widget: string, required: false }
+              - { label: Heading, name: heading, widget: string }
+              - { label: Subheading, name: subheading, widget: text }
+              - label: Primary CTA
+                name: primaryCta
+                widget: object
+                required: false
+                fields:
+                  - { label: Label, name: label, widget: string }
+                  - { label: Link, name: href, widget: string }
+              - label: Secondary CTA
+                name: secondaryCta
+                widget: object
+                required: false
+                fields:
+                  - { label: Label, name: label, widget: string }
+                  - { label: Link, name: href, widget: string }
+              - { label: Background image URL, name: backgroundImage, widget: string, required: false }
+          - { label: Body, name: body, widget: markdown }
+          - label: SEO
+            name: seo
+            widget: object
+            required: false
+            fields:
+              - { label: Description, name: description, widget: text, required: false }
+              - { label: Social image URL, name: image, widget: string, required: false }
+      - file: src/content/pages/about.md
+        label: About
+        name: about
+        fields:
+          - { label: Title, name: title, widget: string }
+          - label: Hero
+            name: hero
+            widget: object
+            required: false
+            fields:
+              - { label: Eyebrow, name: eyebrow, widget: string, required: false }
+              - { label: Heading, name: heading, widget: string }
+              - { label: Subheading, name: subheading, widget: text }
+              - { label: Background image URL, name: backgroundImage, widget: string, required: false }
+          - { label: Body, name: body, widget: markdown }
+          - label: SEO
+            name: seo
+            widget: object
+            required: false
+            fields:
+              - { label: Description, name: description, widget: text, required: false }
+              - { label: Social image URL, name: image, widget: string, required: false }
+      - file: src/content/pages/reservations.md
+        label: Reservations
+        name: reservations
+        fields:
+          - { label: Title, name: title, widget: string }
+          - label: Hero
+            name: hero
+            widget: object
+            required: false
+            fields:
+              - { label: Eyebrow, name: eyebrow, widget: string, required: false }
+              - { label: Heading, name: heading, widget: string }
+              - { label: Subheading, name: subheading, widget: text }
+              - label: Primary CTA
+                name: primaryCta
+                widget: object
+                required: false
+                fields:
+                  - { label: Label, name: label, widget: string }
+                  - { label: Link, name: href, widget: string }
+              - label: Secondary CTA
+                name: secondaryCta
+                widget: object
+                required: false
+                fields:
+                  - { label: Label, name: label, widget: string }
+                  - { label: Link, name: href, widget: string }
+              - { label: Background image URL, name: backgroundImage, widget: string, required: false }
+          - { label: Body, name: body, widget: markdown }
+          - label: SEO
+            name: seo
+            widget: object
+            required: false
+            fields:
+              - { label: Description, name: description, widget: text, required: false }
+              - { label: Social image URL, name: image, widget: string, required: false }
+  - name: menu
+    label: Menu Items
+    folder: src/content/menu
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Slug, name: slug, widget: string, hint: "Lowercase identifier used for links", pattern: ['^[a-z0-9-]+$', 'Use lowercase letters, numbers, and hyphens'] }
+      - label: Category
+        name: category
+        widget: select
+        options:
+          - Starters
+          - Mains
+          - Desserts
+          - Drinks
+      - { label: Price, name: price, widget: string }
+      - { label: Featured, name: featured, widget: boolean, default: false }
+      - { label: Image URL, name: image, widget: string, required: false }
+      - { label: Tags, name: tags, widget: list, required: false }
+      - { label: Description, name: body, widget: markdown }
+  - name: testimonials
+    label: Testimonials
+    folder: src/content/testimonials
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Name, name: name, widget: string }
+      - { label: Title/Role, name: title, widget: string, required: false }
+      - { label: Quote, name: quote, widget: text }
+      - { label: Rating, name: rating, widget: number, min: 1, max: 5, default: 5 }

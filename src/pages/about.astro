@@ -1,0 +1,65 @@
+---
+import { getEntry, render } from 'astro:content';
+import Hero from '../components/Hero.astro';
+import Layout from '../layouts/Layout.astro';
+
+const page = await getEntry('pages', 'about');
+if (!page) {
+  throw new Error('About page not found');
+}
+
+const { Content } = await render(page);
+const hero = page.data.hero ?? {
+  heading: 'Our story',
+  subheading: 'Coast & Ember is guided by craft, community, and coastal heritage.'
+};
+
+const values = [
+  {
+    title: 'Coastal partnerships',
+    description: 'We collaborate with small fisheries, seaweed farms, and biodynamic growers who steward the shoreline.'
+  },
+  {
+    title: 'Low-waste kitchen',
+    description: 'Charcoal filtration, in-house fermentation, and whole-fish butchery minimize waste and maximize flavor.'
+  },
+  {
+    title: 'Hospitality rituals',
+    description: 'Every service begins with a tide check, a staff tasting, and a champagne toast to the evening ahead.'
+  }
+];
+---
+
+<Layout title={`Coast & Ember | ${page.data.title}`} description={page.data.seo?.description}>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-14">
+    <Hero 
+      eyebrow={hero.eyebrow}
+      heading={hero.heading}
+      subheading={hero.subheading}
+      primaryCta={hero.primaryCta}
+      secondaryCta={hero.secondaryCta}
+      backgroundImage={hero.backgroundImage}
+    />
+
+    <section class="prose prose-neutral max-w-none">
+      <Content />
+    </section>
+
+    <section class="grid gap-6 md:grid-cols-3">
+      {values.map((value) => (
+        <article class="rounded-2xl border border-base-300 bg-base-100 p-6">
+          <h3 class="text-xl font-display mb-3">{value.title}</h3>
+          <p class="text-sm text-base-content/80 leading-relaxed">{value.description}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="rounded-3xl border border-base-300 bg-base-200/60 p-10 text-center space-y-5">
+      <h2 class="text-3xl font-display">Meet the team in person</h2>
+      <p class="max-w-2xl mx-auto text-base-content/70">
+        Book a kitchen tour before dinner or schedule a private tasting with Chef Lena to explore seasonal menu concepts.
+      </p>
+      <a href="/reservations" class="btn btn-primary rounded-full">Reserve a tasting</a>
+    </section>
+  </div>
+</Layout>

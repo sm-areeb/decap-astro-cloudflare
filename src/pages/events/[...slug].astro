@@ -1,0 +1,165 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+interface EventData {
+  title: string;
+  date: Date;
+  time: string;
+  location: string;
+  description: string;
+  image?: ImageMetadata;
+  featured: boolean;
+  capacity?: number;
+  price?: string;
+  seo?: Record<string, any>;
+}
+
+interface EventEntry {
+  slug: string;
+  data: EventData;
+  body: string;
+}
+
+export async function getStaticPaths() {
+  const events = await getCollection('events');
+  return events.map((event) => ({
+    params: { slug: event.slug },
+    props: { event },
+  }));
+}
+
+const { event }: { event: EventEntry } = Astro.props;
+const formattedDate = event.data.date.toLocaleDateString('en-US', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+
+const pageTitle = `${event.data.title} | Events | Restaurant Name`;
+const pageDescription = event.data.seo?.description || event.data.description.slice(0, 160);
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="min-h-screen bg-base-200">
+    <!-- Hero Section -->
+    <section class="hero bg-base-100 py-16">
+      <div class="hero-content max-w-4xl">
+        <div class="text-center lg:text-left lg:flex lg:items-center lg:gap-12">
+          {event.data.image && (
+            <div class="lg:shrink-0 mb-8 lg:mb-0">
+              <Image
+                src={event.data.image}
+                alt={event.data.title}
+                width={500}
+                height={400}
+                class="w-full max-w-md mx-auto lg:mx-0 rounded-xl shadow-lg"
+              />
+            </div>
+          )}
+          <div class="lg:grow">
+            <div class="flex items-center justify-center lg:justify-start gap-4 mb-4">
+              <h1 class="text-4xl lg:text-5xl font-bold text-base-content">
+                {event.data.title}
+              </h1>
+              {event.data.featured && (
+                <div class="badge badge-primary badge-lg">Featured</div>
+              )}
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <div>
+                  <div class="font-semibold text-base-content">Date</div>
+                  <div class="text-base-content/70">{formattedDate}</div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                  <div class="font-semibold text-base-content">Time</div>
+                  <div class="text-base-content/70">{event.data.time}</div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <div>
+                  <div class="font-semibold text-base-content">Location</div>
+                  <div class="text-base-content/70">{event.data.location}</div>
+                </div>
+              </div>
+
+              {event.data.capacity && (
+                <div class="flex items-center gap-3">
+                  <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                  </svg>
+                  <div>
+                    <div class="font-semibold text-base-content">Capacity</div>
+                    <div class="text-base-content/70">{event.data.capacity} guests</div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {event.data.price && (
+              <div class="mb-6">
+                <div class="text-2xl font-bold text-primary">{event.data.price}</div>
+              </div>
+            )}
+
+            <div class="flex flex-col sm:flex-row gap-4">
+              <a href="/reservations" class="btn btn-primary">
+                Reserve Your Spot
+              </a>
+              <a href="/events" class="btn btn-outline">
+                View All Events
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Event Description -->
+    <section class="py-16 px-4">
+      <div class="container mx-auto max-w-4xl">
+        <div class="prose prose-lg max-w-none">
+          <slot />
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-16 px-4 bg-base-100">
+      <div class="container mx-auto max-w-4xl text-center">
+        <h2 class="text-3xl font-bold text-base-content mb-6">
+          Questions About This Event?
+        </h2>
+        <p class="text-lg text-base-content/70 mb-8">
+          Our events team is here to help you with any questions about this event or to assist with special accommodations.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/contact" class="btn btn-primary">
+            Contact Us
+          </a>
+          <a href="tel:+1234567890" class="btn btn-outline">
+            Call Now
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>

@@ -1,0 +1,102 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import FeatureList from '../components/FeatureList.astro';
+import Hero from '../components/Hero.astro';
+import MenuHighlights from '../components/MenuHighlights.astro';
+import Layout from '../layouts/Layout.astro';
+
+const page = await getEntry('pages', 'home');
+if (!page) {
+  throw new Error('Home page not found');
+}
+
+const { Content } = await render(page);
+const hero = page.data.hero ?? {
+	heading: 'Welcome to Coast & Ember',
+	subheading: 'Seasonal coastal cuisine with a live-fire twist.'
+};
+
+const menuCollection = await getCollection('menu');
+const menuLookup = new Map(
+	menuCollection.map((entry: CollectionEntry<'menu'>) => [entry.data.slug ?? entry.slug, entry] as const)
+);
+
+const menuEntries = page.data.featuredMenuItems
+	.map((slug: string) => menuLookup.get(slug))
+	.filter((entry: CollectionEntry<'menu'> | undefined): entry is CollectionEntry<'menu'> => Boolean(entry));
+
+const features = [
+	{
+		title: 'Live-fire tasting menus',
+		description: 'Five-course experiences that evolve nightly with the tides, available at the chef’s counter or dining room.',
+		icon: '🔥'
+	},
+	{
+		title: 'Sommelier pairings',
+		description: 'Curated cellar selections highlighting coastal terroir, natural wines, and zero-proof pairings.',
+		icon: '🍷'
+	},
+	{
+		title: 'Glasshouse private dining',
+		description: 'Celebrate with bespoke menus in our glass-encased terrace overlooking the harbor lights.',
+		icon: '🌿'
+	}
+];
+
+const metrics = [
+	{ value: '30', label: 'Years of coastal craft' },
+	{ value: '18', label: 'Seasonal suppliers' },
+	{ value: '2', label: 'Chef’s counter seatings nightly' }
+];
+---
+
+<Layout title={`Coast & Ember | ${page.data.title}`} description={page.data.seo?.description}>
+	<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
+    <Hero 
+      eyebrow={hero.eyebrow}
+      heading={hero.heading}
+      subheading={hero.subheading}
+      primaryCta={hero.primaryCta}
+      secondaryCta={hero.secondaryCta}
+      backgroundImage={hero.backgroundImage}
+    />
+
+		<FeatureList items={features} />
+
+		{menuEntries.length > 0 && <MenuHighlights items={menuEntries} />}
+
+		<section class="grid gap-12 lg:grid-cols-[1.2fr_1fr] items-start">
+			<article class="prose prose-neutral max-w-none">
+				<Content />
+			</article>
+			<aside class="space-y-6">
+				<div class="rounded-3xl border border-base-300 bg-base-200/60 p-8 space-y-6">
+					<h3 class="text-xl font-display">Evening at a glance</h3>
+					<ul class="space-y-4">
+						<li class="flex justify-between items-baseline border-b border-base-300/60 pb-3">
+							<span class="text-sm text-base-content/70">Chef's Counter</span>
+							<span class="font-semibold">5:30 PM &amp; 8:30 PM</span>
+						</li>
+						<li class="flex justify-between items-baseline border-b border-base-300/60 pb-3">
+							<span class="text-sm text-base-content/70">Dining Room</span>
+							<span class="font-semibold">Reservations required</span>
+						</li>
+						<li class="flex justify-between items-baseline">
+							<span class="text-sm text-base-content/70">Private Events</span>
+							<span class="font-semibold">Concierge curated</span>
+						</li>
+					</ul>
+				</div>
+				<div class="grid grid-cols-3 gap-4 text-center">
+					{metrics.map((metric) => (
+						<div class="rounded-2xl border border-base-300 p-4">
+							<p class="text-3xl font-display text-primary">{metric.value}+</p>
+							<p class="text-xs uppercase tracking-wide text-base-content/60">{metric.label}</p>
+						</div>
+					))}
+				</div>
+			</aside>
+		</section>
+	</div>
+</Layout>

@@ -1,0 +1,50 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-neutral text-neutral-content">
+  <div class="max-w-6xl mx-auto px-4 py-12 grid gap-8 md:grid-cols-4">
+    <div class="space-y-4">
+      <h2 class="text-xl font-display">Coast &amp; Ember</h2>
+      <p class="text-sm opacity-80">
+        128 Marina Row<br />
+        Harbor District, Portland, ME
+      </p>
+      <p class="text-sm opacity-70">reservations@coastandember.com<br />207-555-0148</p>
+    </div>
+    <div>
+      <h3 class="text-sm font-semibold uppercase tracking-widest mb-3">Dining</h3>
+      <ul class="space-y-2 text-sm opacity-80">
+        <li><a class="hover:text-primary" href="/menu">Seasonal Menu</a></li>
+        <li><a class="hover:text-primary" href="/reservations">Reservations</a></li>
+        <li><a class="hover:text-primary" href="/about">Our Story</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="text-sm font-semibold uppercase tracking-widest mb-3">Hours</h3>
+      <p class="text-sm opacity-80">
+        Tue–Thu: 5:30 – 10:00 PM<br />
+        Fri–Sat: 5:00 – 11:00 PM<br />
+        Private dining by request
+      </p>
+    </div>
+    <div>
+      <h3 class="text-sm font-semibold uppercase tracking-widest mb-3">Stay in touch</h3>
+      <form class="flex flex-col gap-3">
+        <label class="input input-bordered flex items-center gap-2">
+          <span class="sr-only">Email</span>
+          <input type="email" placeholder="Email address" class="grow" required />
+        </label>
+        <button type="submit" class="btn btn-secondary rounded-full">Join the list</button>
+      </form>
+      <div class="flex gap-4 pt-4 opacity-80">
+        <a href="https://www.instagram.com" class="hover:text-primary">Instagram</a>
+        <a href="https://www.facebook.com" class="hover:text-primary">Facebook</a>
+        <a href="https://www.youtube.com" class="hover:text-primary">YouTube</a>
+      </div>
+    </div>
+  </div>
+  <div class="border-t border-neutral-content/20 py-6 text-center text-xs opacity-60">
+    © {year} Coast &amp; Ember. Crafted with Astro &amp; Decap CMS.
+  </div>
+</footer>

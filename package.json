@@ -1,0 +1,29 @@
+{
+  "name": "decap-astro-cloudflare",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.6.0",
+    "astro": "^5.15.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
+    "@tailwindcss/vite": "^4.1.17",
+    "autoprefixer": "^10.4.22",
+    "daisyui": "^5.5.5",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17"
+  },
+  "postcss": {
+    "plugins": {
+      "@tailwindcss/postcss": {},
+      "autoprefixer": {}
+    }
+  }
+}

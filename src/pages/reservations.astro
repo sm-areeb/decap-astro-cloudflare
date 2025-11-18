@@ -1,0 +1,93 @@
+---
+import { getEntry, render } from 'astro:content';
+import Hero from '../components/Hero.astro';
+import Layout from '../layouts/Layout.astro';
+
+const page = await getEntry('pages', 'reservations');
+if (!page) {
+  throw new Error('Reservations page not found');
+}
+
+const { Content } = await render(page);
+const hero = page.data.hero ?? {
+  heading: 'Reserve a table',
+  subheading: 'We look forward to hosting you for an evening of seasonal coastal flavors.'
+};
+
+const occasions = ['Celebration', 'Anniversary', 'Business', 'Chef\'s Counter', 'Private Event'];
+---
+
+<Layout title={`Coast & Ember | ${page.data.title}`} description={page.data.seo?.description}>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-14">
+    <Hero 
+      eyebrow={hero.eyebrow}
+      heading={hero.heading}
+      subheading={hero.subheading}
+      primaryCta={hero.primaryCta}
+      secondaryCta={hero.secondaryCta}
+      backgroundImage={hero.backgroundImage}
+    />
+
+    <section class="grid gap-12 lg:grid-cols-[1.2fr_1fr] items-start">
+      <article class="prose prose-neutral max-w-none">
+        <Content />
+      </article>
+      <aside class="rounded-3xl border border-base-300 bg-base-200/60 p-6 space-y-4">
+        <h3 class="text-lg font-display">Concierge support</h3>
+        <p class="text-sm text-base-content/70">
+          Our hospitality team is available Tuesday through Saturday, 2 PM – close. Email or call for bespoke menus, dietary accommodations, or private dining inquiries.
+        </p>
+        <div class="space-y-2 text-sm">
+          <p class="font-semibold">Phone</p>
+          <a href="tel:12075550148" class="link">(207) 555-0148</a>
+          <p class="font-semibold pt-2">Email</p>
+          <a href="mailto:reservations@coastandember.com" class="link">reservations@coastandember.com</a>
+        </div>
+      </aside>
+    </section>
+
+    <section class="rounded-3xl border border-base-300 bg-base-100 p-10 space-y-6">
+      <h2 class="text-2xl font-display">Request a reservation</h2>
+      <form class="grid gap-6 md:grid-cols-2" name="reservation">
+        <div class="form-control">
+          <label class="label" for="name"><span class="label-text">Full name</span></label>
+          <input id="name" name="name" required class="input input-bordered" />
+        </div>
+        <div class="form-control">
+          <label class="label" for="email"><span class="label-text">Email</span></label>
+          <input id="email" type="email" name="email" required class="input input-bordered" />
+        </div>
+        <div class="form-control">
+          <label class="label" for="date"><span class="label-text">Preferred date</span></label>
+          <input id="date" type="date" name="date" required class="input input-bordered" />
+        </div>
+        <div class="form-control">
+          <label class="label" for="time"><span class="label-text">Preferred time</span></label>
+          <input id="time" type="time" name="time" required class="input input-bordered" />
+        </div>
+        <div class="form-control">
+          <label class="label" for="guests"><span class="label-text">Guests</span></label>
+          <input id="guests" type="number" min="1" max="12" name="guests" required class="input input-bordered" />
+        </div>
+        <div class="form-control">
+          <label class="label" for="occasion"><span class="label-text">Occasion</span></label>
+          <select id="occasion" name="occasion" class="select select-bordered" required>
+            <option value="">Select</option>
+            {occasions.map((occasion) => (
+              <option value={occasion}>
+                {occasion}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div class="form-control md:col-span-2">
+          <label class="label" for="notes"><span class="label-text">Notes &amp; dietary preferences</span></label>
+          <textarea id="notes" name="notes" rows="4" class="textarea textarea-bordered"></textarea>
+        </div>
+        <div class="md:col-span-2">
+          <button type="submit" class="btn btn-primary rounded-full">Submit request</button>
+        </div>
+      </form>
+    </section>
+  </div>
+</Layout>

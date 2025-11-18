@@ -1,0 +1,62 @@
+---
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Menu', href: '/menu' },
+  { label: 'About', href: '/about' },
+  { label: 'Events', href: '/events' },
+  { label: 'Reservations', href: '/reservations' }
+];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<header class="sticky top-0 z-50 backdrop-blur bg-base-100/80 border-b border-base-300">
+  <div class="navbar max-w-6xl mx-auto px-4">
+    <div class="navbar-start">
+      <a href="/" class="flex items-center gap-2 text-xl font-display tracking-tight text-primary">
+        <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+          CE
+        </span>
+        <span>Coast &amp; Ember</span>
+      </a>
+    </div>
+    <div class="navbar-center hidden lg:flex">
+      <nav class="menu menu-horizontal gap-2 text-sm font-medium">
+        {navLinks.map((link) => {
+          const normalized = link.href.replace(/\/$/, '') || '/';
+          const isActive = currentPath === normalized;
+          return (
+            <a
+              href={link.href}
+              class={`btn btn-ghost rounded-full ${isActive ? 'text-primary font-semibold' : 'text-base-content/80'}`}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {link.label}
+            </a>
+          );
+        })}
+      </nav>
+    </div>
+    <div class="navbar-end gap-2">
+      <details class="dropdown dropdown-end lg:hidden">
+        <summary class="btn btn-ghost">
+          <span class="sr-only">Toggle navigation</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </summary>
+        <ul class="menu dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-56">
+          {navLinks.map((link) => {
+            const normalized = link.href.replace(/\/$/, '') || '/';
+            const isActive = currentPath === normalized;
+            return (
+              <li>
+                <a href={link.href} class={isActive ? 'active font-semibold text-primary' : undefined}>{link.label}</a>
+              </li>
+            );
+          })}
+        </ul>
+      </details>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,23 @@
+---
+interface Feature {
+  title: string;
+  description: string;
+  icon: string;
+}
+
+const { items = [] }: { items?: Feature[] } = Astro.props;
+---
+
+<section class="grid gap-6 md:grid-cols-3">
+  {items.map((feature) => (
+    <article class="card bg-base-100 shadow-md border border-base-200">
+      <div class="card-body">
+        <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-2xl">
+          <span aria-hidden="true">{feature.icon}</span>
+        </div>
+        <h3 class="card-title pt-4 text-xl">{feature.title}</h3>
+        <p class="text-sm text-base-content/80 leading-relaxed">{feature.description}</p>
+      </div>
+    </article>
+  ))}
+</section>
